@@ -1,23 +1,23 @@
-import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { createContext, useContext, useEffect, useState } from "react";
 
 export const UserContext = createContext(null);
 
 export const useUserContext = () => useContext(UserContext);
 
-const UserContextProvider = ({ children }) => {
+export const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [ready, setReady] = useState(false);
 
-  const getUser = async () => {
-    const { data } = await axios.get("/profile");
-
-    setUser(data);
-    setReady(true);
-  };
-
   useEffect(() => {
-    if (!user) getUser();
+    const axiosGet = async () => {
+      const { data } = await axios.get("/users/profile");
+
+      setUser(data);
+      setReady(true);
+    };
+
+    axiosGet();
   }, []);
 
   return (
@@ -26,5 +26,3 @@ const UserContextProvider = ({ children }) => {
     </UserContext.Provider>
   );
 };
-
-export default UserContextProvider;

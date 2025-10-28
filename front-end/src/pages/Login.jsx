@@ -1,75 +1,70 @@
 import React, { useState } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
 import { useUserContext } from "../contexts/UserContext";
 
 const Login = () => {
+  const { user, setUser } = useUserContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [redirect, setRedirect] = useState(false);
-  const { id } = useParams();
-
-  const { setUser } = useUserContext();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // console.log(`Rolou um submit com essas infos: ${email}, ${password}`);
+    if (email && password) {
+      try {
+        const { data: userDoc } = await axios.post("/users/login", {
+          email,
+          password,
+        });
 
-    try {
-      const { data } = await axios.post("/login", {
-        email,
-        password,
-      });
-
-      setUser(data);
-
-      // alert("Login realizado com sucesso!");
-
-      setRedirect(true);
-    } catch (error) {
-      alert(`Erro ao efetuar o login: ${error.response.data}`);
+        setUser(userDoc);
+        setRedirect(true);
+      } catch (error) {
+        alert(`Deu um erro ao logar: ${JSON.stringify(error)}`);
+      }
+    } else {
+      alert("Você precisa preencher o e-mail e a senha!");
     }
   };
 
-  if (redirect) {
-    return id ? <Navigate to={"/place/" + id} /> : <Navigate to="/" />;
-  }
+  if (redirect || user) return <Navigate to="/" />;
 
   return (
-    <div className="flex w-full grow flex-col items-center justify-center gap-6 px-4 py-8">
-      <h1 className="text-3xl font-bold">Faça seu login</h1>
+    <section className="flex items-center">
+      <div className="mx-auto flex w-full max-w-96 flex-col items-center gap-4">
+        <h1 className="text-3xl font-bold">Faça seu login</h1>
 
-      <form
-        className="flex w-full max-w-96 flex-col gap-2"
-        onSubmit={handleSubmit}
-      >
-        <input
-          onChange={(e) => setEmail(e.target.value)}
-          type="email"
-          placeholder="Digite seu e-mail"
-        />
-        <input
-          onChange={(e) => setPassword(e.target.value)}
-          type="password"
-          placeholder="Digite sua senha"
-        />
+        <form className="flex w-full flex-col gap-2" onSubmit={handleSubmit}>
+          <input
+            type="email"
+            className="w-full rounded-full border border-gray-300 px-4 py-2"
+            placeholder="Digite seu e-mail"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            type="password"
+            className="w-full rounded-full border border-gray-300 px-4 py-2"
+            placeholder="Digite sua senha"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
 
-        <button
-          type="submit"
-          className="bg-primary-400 rounded-full text-white"
-        >
-          Login
-        </button>
-      </form>
+          <button className="bg-primary-400 w-full cursor-pointer rounded-full border border-gray-300 px-4 py-2 font-bold text-white">
+            Login
+          </button>
+        </form>
 
-      <p>
-        Ainda não tem uma conta?{" "}
-        <Link to="/register" className="underline">
-          Registre-se aqui!
-        </Link>
-      </p>
-    </div>
+        <p>
+          Ainda não tem uma conta?{" "}
+          <Link to="/register" className="font-semibold underline">
+            Registre-se aqui!
+          </Link>
+        </p>
+      </div>
+    </section>
   );
 };
 

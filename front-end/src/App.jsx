@@ -1,36 +1,38 @@
+import axios from "axios";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import { UserContextProvider } from "./contexts/UserContext";
 import Home from "./pages/Home";
-import Header from "./components/Header";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Account from "./pages/Account/Account";
-import axios from "axios";
-import UserContextProvider from "./contexts/UserContext";
-import Accomodation from "./pages/Accomodation";
+import Account from "./pages/Account";
+import Header from "./components/Header";
+import Place from "./pages/Place";
 
 axios.defaults.baseURL =
-  import.meta.env.MODE === "development" ? "http://localhost:3000/api" : "/api";
-axios.defaults.withCredentials = true;
+  import.meta.env.MODE === "development"
+    ? "http://localhost:4200/api"
+    : "http://localhost:4200/api";
 
-console.log(import.meta.env.MODE);
+//https://hashbnb-youtube.onrender.com/api
+
+axios.defaults.withCredentials = true;
 
 function App() {
   return (
-    <BrowserRouter>
-      <UserContextProvider>
+    <UserContextProvider>
+      <BrowserRouter>
         <Header />
 
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/login/:id?" element={<Login />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/account/:subpage?" element={<Account />} />
-          <Route path="/account/:subpage/:action" element={<Account />} />
-          <Route path="/account/:subpage/:action" element={<Account />} />
-          <Route path="/place/:id/:booking?" element={<Accomodation />} />
+          <Route path="/account/:subpage/:action?/:id?" element={<Account />} />
+          <Route path="/place/:id" element={<Place />} />
         </Routes>
-      </UserContextProvider>
-    </BrowserRouter>
+      </BrowserRouter>
+    </UserContextProvider>
   );
 }
 

@@ -1,28 +1,22 @@
-import axios from "axios";
 import React from "react";
 import { Link } from "react-router-dom";
-import Image from "./Image";
 
-const Item = ({ _id: id, description, price, photos, address }) => {
-  if (!photos) return <></>;
-
+const Item = ({ place }) => {
   return (
-    <Link to={"/place/" + id} className="flex flex-col gap-2">
-      <Image
-        src={photos[0]}
-        alt="Imagem do lugar"
-        className="aspect-square overflow-hidden rounded-2xl object-cover"
+    <Link to={`/place/${place._id}`} className="flex flex-col gap-2">
+      <img
+        src={place.photos[0]}
+        alt="Imagem da acomodação"
+        className="aspect-square rounded-2xl object-cover"
       />
 
       <div>
-        <h2 className="truncate text-lg font-semibold">{address}</h2>
-        <p className="truncate text-gray-600 hover:text-ellipsis">
-          {description}
-        </p>
+        <h3 className="text-xl font-semibold">{place.city}</h3>
+        <p className="truncate text-gray-600">{place.description}</p>
       </div>
 
       <p>
-        <span className="font-semibold">R$ {price}</span> por noite
+        <span className="font-semibold"> R$ {place.price}</span> por noite
       </p>
     </Link>
   );

@@ -16,11 +16,11 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.12",
-    "axios": "^1.8.2",
+    "axios": "^1.12.2",
     "hashbnb": "file:..",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^7.9.3",
+    "react-router-dom": "^7.9.4",
     "tailwindcss": "^4.0.12"
   },
   "devDependencies": {
